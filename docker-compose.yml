@@ -1,0 +1,10 @@
+# docker-compose.yml
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: logistics
+      POSTGRES_USER: logistics
+      POSTGRES_PASSWORD: logistics
+    ports:
+      - "5432:5432"
