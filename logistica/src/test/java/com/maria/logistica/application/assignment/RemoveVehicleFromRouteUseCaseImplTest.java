@@ -17,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-public class RemoveVehicleFromRouteUseCaseImplTest {
+class RemoveVehicleFromRouteUseCaseImplTest {
 
     @Mock
     private RouteRepositoryPort routeRepositoryPort;
@@ -40,7 +40,36 @@ public class RemoveVehicleFromRouteUseCaseImplTest {
         boolean result = removeVehicleFromRouteUseCase.execute(1L);
 
         assertTrue(result);
+        assertNull(route.getVehicleAssigned());
 
-        verify(routeRepositoryPort, times(1)).save(route);
+        verify(routeRepositoryPort).save(route);
+    }
+
+    @Test
+    void shouldReturnFalseWhenRouteHasNoVehicle() {
+
+        Route route = new Route(); // sin vehículo
+
+        when(routeRepositoryPort.findById(1L))
+                .thenReturn(Optional.of(route));
+
+        boolean result = removeVehicleFromRouteUseCase.execute(1L);
+
+        assertFalse(result);
+
+        verify(routeRepositoryPort, never()).save(any());
+    }
+
+    @Test
+    void shouldReturnFalseWhenRouteNotFound() {
+
+        when(routeRepositoryPort.findById(1L))
+                .thenReturn(Optional.empty());
+
+        boolean result = removeVehicleFromRouteUseCase.execute(1L);
+
+        assertFalse(result);
+
+        verify(routeRepositoryPort, never()).save(any());
     }
 }

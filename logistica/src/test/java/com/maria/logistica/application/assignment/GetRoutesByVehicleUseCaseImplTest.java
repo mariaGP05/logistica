@@ -16,7 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
-public class GetRoutesByVehicleUseCaseImplTest {
+class GetRoutesByVehicleUseCaseImplTest {
 
     @Mock
     private RouteRepositoryPort routeRepositoryPort;
@@ -27,14 +27,29 @@ public class GetRoutesByVehicleUseCaseImplTest {
     @Test
     void shouldReturnRoutes() {
 
-        when(routeRepositoryPort.findByVehicleLicensePlate("ABC123"))
-                .thenReturn(List.of(new Route()));
+        Route route = new Route();
 
-        var result = getRoutesByVehicleUseCase.execute("ABC123");
+        when(routeRepositoryPort.findByVehicleLicensePlate("ABC123"))
+                .thenReturn(List.of(route));
+
+        List<Route> result = getRoutesByVehicleUseCase.execute("ABC123");
 
         assertEquals(1, result.size());
+        assertEquals(route, result.get(0));
 
-        verify(routeRepositoryPort, times(1))
-                .findByVehicleLicensePlate("ABC123");
+        verify(routeRepositoryPort).findByVehicleLicensePlate("ABC123");
+    }
+
+    @Test
+    void shouldReturnEmptyListWhenNoRoutesFound() {
+
+        when(routeRepositoryPort.findByVehicleLicensePlate("ABC123"))
+                .thenReturn(List.of());
+
+        List<Route> result = getRoutesByVehicleUseCase.execute("ABC123");
+
+        assertTrue(result.isEmpty());
+
+        verify(routeRepositoryPort).findByVehicleLicensePlate("ABC123");
     }
 }

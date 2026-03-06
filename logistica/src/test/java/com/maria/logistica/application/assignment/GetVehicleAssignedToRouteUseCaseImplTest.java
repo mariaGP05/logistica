@@ -17,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-public class GetVehicleAssignedToRouteUseCaseImplTest {
+class GetVehicleAssignedToRouteUseCaseImplTest {
 
     @Mock
     private RouteRepositoryPort routeRepositoryPort;
@@ -28,16 +28,46 @@ public class GetVehicleAssignedToRouteUseCaseImplTest {
     @Test
     void shouldReturnVehicle() {
 
+        Vehicle vehicle = new Vehicle();
         Route route = new Route();
-        route.setVehicleAssigned(new Vehicle());
+        route.setVehicleAssigned(vehicle);
 
         when(routeRepositoryPort.findById(1L))
                 .thenReturn(Optional.of(route));
 
-        var result = getVehicleAssignedToRouteUseCase.execute(1L);
+        Optional<Vehicle> result = getVehicleAssignedToRouteUseCase.execute(1L);
 
         assertTrue(result.isPresent());
+        assertEquals(vehicle, result.get());
 
-        verify(routeRepositoryPort, times(1)).findById(1L);
+        verify(routeRepositoryPort).findById(1L);
+    }
+
+    @Test
+    void shouldReturnEmptyWhenRouteHasNoVehicle() {
+
+        Route route = new Route(); // sin vehículo asignado
+
+        when(routeRepositoryPort.findById(1L))
+                .thenReturn(Optional.of(route));
+
+        Optional<Vehicle> result = getVehicleAssignedToRouteUseCase.execute(1L);
+
+        assertTrue(result.isEmpty());
+
+        verify(routeRepositoryPort).findById(1L);
+    }
+
+    @Test
+    void shouldReturnEmptyWhenRouteNotFound() {
+
+        when(routeRepositoryPort.findById(1L))
+                .thenReturn(Optional.empty());
+
+        Optional<Vehicle> result = getVehicleAssignedToRouteUseCase.execute(1L);
+
+        assertTrue(result.isEmpty());
+
+        verify(routeRepositoryPort).findById(1L);
     }
 }

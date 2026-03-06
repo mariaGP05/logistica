@@ -36,4 +36,17 @@ public class GetAllVehiclesUseCaseImplTest {
 
         verify(vehicleRepositoryPort, times(1)).findAll();
     }
+
+    @Test
+    void shouldReturnEmptyList() {
+
+        when(vehicleRepositoryPort.findAll())
+                .thenReturn(List.of());
+
+        var result = getAllVehiclesUseCase.execute();
+
+        assertTrue(result.isEmpty());
+
+        verify(vehicleRepositoryPort).findAll();
+    }
 }

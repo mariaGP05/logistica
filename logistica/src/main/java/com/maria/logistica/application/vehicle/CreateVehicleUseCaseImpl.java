@@ -24,5 +24,3 @@ public class CreateVehicleUseCaseImpl implements CreateVehicleUseCase {
         return saved;
     }
 }
-
-

@@ -36,4 +36,17 @@ public class GetAllRoutesUseCaseImplTest {
 
         verify(routeRepositoryPort, times(1)).findAll();
     }
+
+    @Test
+    void shouldReturnEmptyList() {
+
+        when(routeRepositoryPort.findAll())
+                .thenReturn(List.of());
+
+        var result = getAllRoutesUseCase.execute();
+
+        assertTrue(result.isEmpty());
+
+        verify(routeRepositoryPort).findAll();
+    }
 }

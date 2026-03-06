@@ -43,4 +43,20 @@ public class UpdateRouteUseCaseImplTest {
         verify(routeRepositoryPort, times(1)).findById(1L);
         verify(routeRepositoryPort, times(1)).save(route);
     }
+
+    @Test
+    void shouldReturnEmptyWhenRouteNotFound() {
+
+        Route route = new Route();
+
+        when(routeRepositoryPort.findById(1L))
+                .thenReturn(Optional.empty());
+
+        var result = updateRouteUseCase.execute(1L, route);
+
+        assertTrue(result.isEmpty());
+
+        verify(routeRepositoryPort).findById(1L);
+        verify(routeRepositoryPort, never()).save(any());
+    }
 }

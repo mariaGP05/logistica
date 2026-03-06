@@ -42,4 +42,18 @@ public class GetVehicleByLicensePlateUseCaseImplTest {
         verify(vehicleRepositoryPort, times(1))
                 .findByLicensePlate("1234ABC");
     }
+
+    @Test
+    void shouldReturnEmptyWhenVehicleNotFound() {
+
+        when(vehicleRepositoryPort.findByLicensePlate("1234ABC"))
+                .thenReturn(Optional.empty());
+
+        Optional<Vehicle> result =
+                getVehicleUseCase.execute("1234ABC");
+
+        assertTrue(result.isEmpty());
+
+        verify(vehicleRepositoryPort).findByLicensePlate("1234ABC");
+    }
 }

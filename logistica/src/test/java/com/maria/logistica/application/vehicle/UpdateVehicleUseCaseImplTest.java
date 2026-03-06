@@ -47,4 +47,22 @@ public class UpdateVehicleUseCaseImplTest {
         verify(vehicleRepositoryPort).findByLicensePlate("ABC");
         verify(vehicleRepositoryPort).save(updated);
     }
+
+    @Test
+    void shouldReturnEmptyWhenVehicleNotFound() {
+
+        Vehicle updated = new Vehicle();
+        updated.setLicensePlate("NEW123");
+
+        when(vehicleRepositoryPort.findByLicensePlate("ABC"))
+                .thenReturn(Optional.empty());
+
+        Optional<Vehicle> result =
+                updateVehicleUseCase.execute("ABC", updated);
+
+        assertTrue(result.isEmpty());
+
+        verify(vehicleRepositoryPort).findByLicensePlate("ABC");
+        verify(vehicleRepositoryPort, never()).save(any());
+    }
 }

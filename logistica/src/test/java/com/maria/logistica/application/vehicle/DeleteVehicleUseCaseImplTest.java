@@ -6,6 +6,7 @@ import com.maria.logistica.domain.port.output.VehicleRepositoryPort;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import org.mockito.InjectMocks;
@@ -33,5 +34,18 @@ public class DeleteVehicleUseCaseImplTest {
 
         verify(vehicleRepositoryPort, times(1))
                 .deleteByLicensePlate("1234ABC");
+    }
+
+    @Test
+    void shouldReturnFalseWhenVehicleNotFound() {
+
+        when(vehicleRepositoryPort.findByLicensePlate("1234ABC"))
+                .thenReturn(Optional.empty());
+
+        boolean result = deleteVehicleUseCase.execute("1234ABC");
+
+        assertFalse(result);
+
+        verify(vehicleRepositoryPort, never()).deleteByLicensePlate(any());
     }
 }

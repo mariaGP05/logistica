@@ -2,6 +2,10 @@ package com.maria.logistica.application.route;
 
 import com.maria.logistica.domain.port.output.RouteRepositoryPort;
 
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -29,5 +33,18 @@ public class DeleteRouteUseCaseImplTest {
         deleteRouteUseCase.execute(1L);
 
         verify(routeRepositoryPort, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void shouldReturnFalseWhenRouteNotFound() {
+
+        when(routeRepositoryPort.findById(1L))
+                .thenReturn(Optional.empty());
+
+        boolean result = deleteRouteUseCase.execute(1L);
+
+        assertFalse(result);
+
+        verify(routeRepositoryPort, never()).deleteById(any());
     }
 }

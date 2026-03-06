@@ -40,4 +40,17 @@ public class GetRouteByIdUseCaseImplTest {
 
         verify(routeRepositoryPort, times(1)).findById(1L);
     }
+
+    @Test
+    void shouldReturnEmptyWhenRouteNotFound() {
+
+        when(routeRepositoryPort.findById(1L))
+                .thenReturn(Optional.empty());
+
+        Optional<Route> result = getRouteByIdUseCase.execute(1L);
+
+        assertTrue(result.isEmpty());
+
+        verify(routeRepositoryPort).findById(1L);
+    }
 }

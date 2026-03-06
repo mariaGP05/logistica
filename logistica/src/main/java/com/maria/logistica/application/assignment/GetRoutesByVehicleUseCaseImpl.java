@@ -25,5 +25,3 @@ public class GetRoutesByVehicleUseCaseImpl implements GetRoutesByVehicleUseCase 
         return routes;
     }
 }
-
-
